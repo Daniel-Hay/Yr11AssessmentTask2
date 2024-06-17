@@ -1,4 +1,11 @@
 from tkinter import *
+import json
+import requests
+
+print("hello")
+response = requests.get("https://nba-stats-db.herokuapp.com/api/playerdata/name/Nikola Jokić") 
+print(response.status_code)
+print(response.json())
 
 root = Tk()  # create a root widget
 root.title("Tk Example")
