@@ -53,11 +53,16 @@ class main:
 
 # Make the user choose which year they want to play
 
+
 def choice():
     # Use tkinter to show choices
-    pass
+    button1 = ctk.CTkButton(app, text="2023", command=main.choice1)
+    button1.pack()
+    button2 = ctk.CTkButton(app, text="2017", command=main.choice2)
+    button2.pack()
 
 if __name__ == '__main__':
-    main.choice1()
-    main.choice2()
+    choice()
+    #main.choice1()
+    #main.choice2()
     app.mainloop()
