@@ -8,6 +8,7 @@ from random import choice
 import random
 import os
 import sys
+from abc import ABC, abstractmethod
 
 # Creates the main window
 app = ctk.CTk()
@@ -18,23 +19,46 @@ ctk.set_appearance_mode("Dark")
 
 ## Use comments and docstrings
 
-class API:    
+class API:
+    """
+    A class representing an API.
+    
+    Attributes:
+        url (str): The URL of the API.
+        
+    Methods:
+    openData: Gets the data from the API and converts the json data into a readable python dictionary
+    retrieveStat: Parent method of the child class nbaData, demonstrating abstraction
+    """
     def __init__(self, url):
-        self.url = url
+        self.url = urlstring
         
     def openData(self):
         response = requests.get(self.url)
         playersData = json.loads(response.text)
         return playersData
+    
+    @abstractmethod
+    def retrieveStat(self):
+        pass
 
 # Class that retrieves the data from the API, randomly selecting the player and their related stat
 class nbaData(API):
+    """
+    A class representing NBA player data.
+    
+    Attributes:
+        url (str): The URL of the API.
+        
+    Methods:
+        retrieveStat: Retrieves a random player and their related stat.
+    """
     def __init__(self, url):
         super().__init__(url)
 
     def retrieveStat(self):
         randomPlayerID = random.randrange(100)
-        apiData = API(f'https://nba-stats-db.herokuapp.com/api/playerdata/topscorers/total/season/{combobox.get()}')
+        apiData = API(self.url)
         callRandomData = apiData.openData()
         randomStat = random.choice(["PTS", "AST", "TRB", "STL", "BLK", "TOV", "PF"])
         randomPlayer = callRandomData["results"][randomPlayerID]["player_name"]
@@ -45,6 +69,18 @@ class nbaData(API):
 
 # Class that creates questions based on NBA data
 class QuestionSet:
+    """
+    A class representing a set of questions based on NBA data.
+
+    Attributes:
+    nba_data (dict): A dictionary containing NBA player data.
+    questions (list): A list of questions.
+
+    Methods:
+    create_player_questions: Creates a question based on a player's name and stat.
+    create_questions: Creates questions based on the NBA data.
+    get_questions: Returns the list of questions.
+    """    
     def __init__(self, nba_data):
         self.nba_data = nba_data
         self.questions = []
@@ -52,7 +88,6 @@ class QuestionSet:
     def create_player_questions(self, player_name, player_stat):
         question = f"What was the average {player_stat}s of {player_name} in {combobox.get()}?"
         self.questions.append(question)
-
 
     def create_questions(self):
         for player in self.nba_data:
@@ -63,19 +98,37 @@ class QuestionSet:
         return self.questions
 
 class Question:
+    """
+    A class representing a question and its answer.
+    
+    Attributes:
+        _question (str): The question.
+        _answer (str): The answer to the question.
+    """
+    
     def __init__(self, question, answer):
-        self.question = question
-        self.answer = answer
+        self._question = question
+        self._answer = answer
 
     def __str__(self):
-        return self.question
+        return self._question
 
 class User:
+    """
+    A class representing a user.
+
+    Attributes:
+        _score (int): The user's score.
+
+    Methods:
+        increase_score: Increases the user's score by 1.
+    """
+    
     def __init__(self):
-        self.score = 0
+        self._score = 0
 
     def increase_score(self):
-        self.score += 1
+        self._score += 1
 
 # Header of the App
 header = ctk.CTkLabel(app, text="Nba Trivia", fg_color="transparent", font=("Playwrite US Modern", 50))
@@ -92,7 +145,7 @@ combobox.set("2023")  # sets initial value
 
 # Calls the API with the selected year from above
 def start():
-    print("button pressed")
+    # Clears the app from previous widgets
     header.pack_forget()
     select_question.pack_forget()
     combobox.pack_forget()
@@ -107,6 +160,12 @@ user1 = User()
 user2 = User()
 
 def questionTkinter():
+    """
+    This function generates a question using NBA player statistics and displays it in a Tkinter GUI.
+    It allows two players to enter their answers, checks the answers, updates the scores, and determines the winner.
+    The function also provides a button to move to the next question.
+    """
+
     # Generate the questions
 
     # Clear all widgets
@@ -114,7 +173,7 @@ def questionTkinter():
         widget.pack_forget()
 
     def submit():
-        print("Submitted")
+        # Clears the app from previous widgets
         questiondisplay.pack_forget()
         actualquestion.pack_forget()
         entry.pack_forget()
@@ -159,21 +218,21 @@ def questionTkinter():
                     user2.increase_score()
                 
                 # Updates the user's scores
-                score_label = ctk.CTkLabel(app, text=f"Score: Player 1: {user1.score}, Player 2: {user2.score}", fg_color="transparent")
+                score_label = ctk.CTkLabel(app, text=f"Score: Player 1: {user1._score}, Player 2: {user2._score}", fg_color="transparent")
                 score_label.pack(pady=10)
 
                 # Checks if a user has won by reaching 7 points
-                if user1.score == 7:
+                if user1._score == 7:
                     winner("Player 1")
 
-                elif user2.score == 7:
+                elif user2._score == 7:
                     winner("Player 2")
 
                 next_question_button = ctk.CTkButton(app, text="Next Question", command=questionTkinter)
                 next_question_button.pack(pady=10)
 
             except ValueError:
-
+                # If player inputs a string, it will display an error message and move to the next question
                 error_label = ctk.CTkLabel(app, text="Please enter a number", fg_color="red")
                 error_label.pack(pady=10)
                 next_question_button = ctk.CTkButton(app, text="Next Question", command=questionTkinter)
@@ -181,8 +240,9 @@ def questionTkinter():
 
         check_answer(player_stat)
 
-        
-    nba_API = API(f"https://nba-stats-db.herokuapp.com/api/playerdata/topscorers/total/season/{combobox.get()}")
+    global urlstring
+    urlstring = f"https://nba-stats-db.herokuapp.com/api/playerdata/topscorers/total/season/{combobox.get()}"
+    nba_API = API(urlstring)
 
     # Creates an instance of nbaData
     nba_data = nbaData(nba_API)
@@ -193,7 +253,7 @@ def questionTkinter():
     player_name, player_stat, random_stat = nba_data.retrieveStat()
     question_set.create_player_questions(player_name, random_stat)
 
-    questiondisplay = ctk.CTkLabel(app, text="Question 1", fg_color="transparent")
+    questiondisplay = ctk.CTkLabel(app, text=f"Question 1", fg_color="transparent")
     questiondisplay.pack(pady=10)
 
     actualquestion = ctk.CTkLabel(app, text=question_set.get_questions()[0], fg_color="transparent")
