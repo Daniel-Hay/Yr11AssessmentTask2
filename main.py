@@ -6,11 +6,14 @@ import requests
 import customtkinter as ctk
 from random import choice
 import random
+import os
+import sys
 
 # Creates the main window
 app = ctk.CTk()
 app.geometry("600x500")
 app.title("NBA Trivia Game")
+ctk.set_appearance_mode("Dark") 
 
 
 ## Use comments and docstrings
@@ -131,10 +134,21 @@ def questionTkinter():
         def check_answer(player_stat):
             # Checks if the user input is a number, if not, it will display an error message
             try:
+
+                def winner(Player):
+                    answer.pack_forget()
+                    p1_answer.pack_forget()
+                    p2_answer.pack_forget()
+                    score_label.pack_forget()
+
+                    winner_label = ctk.CTkLabel(app, text=f"{Player} Wins!", fg_color="green", font=("Playwrite US Modern", 50))
+                    winner_label.pack(pady=10)
+
+
                 player_stat = float(player_stat)
                 user1_answer = float(entry.get())
                 user2_answer = float(entry2.get())
-            
+
                 user1_difference = abs(user1_answer - player_stat)
                 user2_difference = abs(user2_answer - player_stat)
 
@@ -150,14 +164,10 @@ def questionTkinter():
 
                 # Checks if a user has won by reaching 7 points
                 if user1.score == 7:
-                    winner_label = ctk.CTkLabel(app, text="Player 1 Wins!", fg_color="green", font=("Playwrite US Modern", 50))
-                    winner_label.pack(pady=10)
-                    exit()
+                    winner("Player 1")
 
                 elif user2.score == 7:
-                    winner_label = ctk.CTkLabel(app, text="Player 2 Wins!", fg_color="green", font=("Playwrite US Modern", 50))
-                    winner_label.pack(pady=10)
-                    exit()
+                    winner("Player 2")
 
                 next_question_button = ctk.CTkButton(app, text="Next Question", command=questionTkinter)
                 next_question_button.pack(pady=10)
