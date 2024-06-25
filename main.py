@@ -203,6 +203,9 @@ def questionTkinter():
                     winner_label = ctk.CTkLabel(app, text=f"{Player} Wins!", fg_color="green", font=("Playwrite US Modern", 50))
                     winner_label.pack(pady=10)
 
+                    os.time.sleep(5)
+                    sys.exit()
+
 
                 player_stat = float(player_stat)
                 user1_answer = float(entry.get())
