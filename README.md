@@ -1,7 +1,7 @@
 # Yr11AssessmentTask2
 
 ## Explaination
-NBA Trivia is an guessing game based on real life statistics of NBA players, where you compete against another player to try and get to 7 points first. You gain points by being the closer player to the actual NBA athelete's statistic. For example, if you guess 9 and player 2 guesses 7 whilst the answer is 12, you would win a point for that round. 
+NBA Trivia is an guessing game based on real life statistics of NBA players, where you compete against another player to try and get to 7 points first. You gain points by being the closer player to the actual NBA athelete's statistic. For example, if you guess 9 and player 2 guesses 7 whilst the answer is 12, you would win a point for that round. If you want to continue playing the game you can press next question to continue. This will continue counting the points.
 
 How to play:
 1. Run the game
