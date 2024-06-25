@@ -8,6 +8,7 @@ from random import choice
 import random
 import os
 import sys
+import time
 from abc import ABC, abstractmethod
 
 # Creates the main window
@@ -130,6 +131,8 @@ class User:
     def increase_score(self):
         self._score += 1
 
+
+
 # Header of the App
 header = ctk.CTkLabel(app, text="Nba Trivia", fg_color="transparent", font=("Playwrite US Modern", 50))
 header.pack(pady=10)
@@ -191,9 +194,9 @@ def questionTkinter():
         p2_answer.pack(pady=10)
 
         def check_answer(player_stat):
+
             # Checks if the user input is a number, if not, it will display an error message
             try:
-
                 def winner(Player):
                     answer.pack_forget()
                     p1_answer.pack_forget()
@@ -202,10 +205,6 @@ def questionTkinter():
 
                     winner_label = ctk.CTkLabel(app, text=f"{Player} Wins!", fg_color="green", font=("Playwrite US Modern", 50))
                     winner_label.pack(pady=10)
-
-                    os.time.sleep(5)
-                    sys.exit()
-
 
                 player_stat = float(player_stat)
                 user1_answer = float(entry.get())
@@ -256,7 +255,7 @@ def questionTkinter():
     player_name, player_stat, random_stat = nba_data.retrieveStat()
     question_set.create_player_questions(player_name, random_stat)
 
-    questiondisplay = ctk.CTkLabel(app, text=f"Question 1", fg_color="transparent")
+    questiondisplay = ctk.CTkLabel(app, text=f"Question", fg_color="transparent")
     questiondisplay.pack(pady=10)
 
     actualquestion = ctk.CTkLabel(app, text=question_set.get_questions()[0], fg_color="transparent")
